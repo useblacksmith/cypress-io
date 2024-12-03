@@ -63,13 +63,11 @@
 - Suppress [job summary](#suppress-job-summary)
 - [More examples](#more-examples)
 
-Examples contained in this repository, based on current Cypress versions, can be found in the [examples](./examples) directory. Examples for [Legacy Configuration](https://on.cypress.io/guides/references/legacy-configuration), which use Cypress `9.7.0`, are no longer maintained. They can be referred to in the [examples/v9](https://github.com/cypress-io/github-action/tree/v5/examples/v9) directory of the [v5](https://github.com/cypress-io/github-action/tree/v5/) branch.
+Examples contained in this repository, based on current Cypress versions, can be found in the [examples](./examples) directory.
 
 Live examples, such as [example-basic.yml](.github/workflows/example-basic.yml) are shown together with a status badge. Click on the status badge to read the source code of the workflow, for example
 
 [![End-to-End example](https://github.com/cypress-io/github-action/actions/workflows/example-basic.yml/badge.svg)](.github/workflows/example-basic.yml)
-
-Older **external** examples based on a [Legacy Configuration](https://on.cypress.io/guides/references/legacy-configuration) for Cypress `9` and earlier can be found in the [README](https://github.com/cypress-io/github-action/blob/v5/README.md) for version `v5`.
 
 **Note:** this package assumes that [cypress](https://www.npmjs.com/package/cypress) is declared as a development dependency in the [package.json](https://docs.npmjs.com/creating-a-package-json-file) file. The [cypress npm module](https://www.npmjs.com/package/cypress) is required to run Cypress via its [Module API](https://on.cypress.io/module-api).
 
@@ -94,7 +92,7 @@ jobs:
 
 The workflow file [example-basic.yml](.github/workflows/example-basic.yml) shows how Cypress runs on GH Actions using Ubuntu (20 and 22), Windows, and macOS without additional OS dependencies necessary.
 
-This workflow uses the default [test type](https://on.cypress.io/guides/overview/why-cypress#Test-types) of [End-to-End (E2E) Testing](https://on.cypress.io/guides/overview/why-cypress#End-to-end). Alternatively, [Component Testing](https://on.cypress.io/guides/overview/why-cypress#Component) can be utilized by referencing the [Component Testing](#component-testing) section below.
+This workflow uses the default [test type](https://on.cypress.io/choosing-testing-type) of [End-to-End (E2E) Testing](https://on.cypress.io/app/core-concepts/testing-types#What-is-E2E-Testing). Alternatively, [Component Testing](https://on.cypress.io/app/core-concepts/testing-types#What-is-Component-Testing) can be utilized by referencing the [Component Testing](#component-testing) section below.
 
 ### Component Testing
 
@@ -531,7 +529,7 @@ jobs:
     # let's make sure our "app" works on several versions of Node
     strategy:
       matrix:
-        node: [18, 20, 22]
+        node: [18, 20, 22, 23]
     name: E2E on Node v${{ matrix.node }}
     steps:
       - name: Setup Node
@@ -561,7 +559,7 @@ You can pass multiple tags using commas like `tag: node-18,nightly,staging`.
 
 ### Specify auto cancel after failures
 
-Specify the number of failed tests that will cancel a run when using the [Cypress Cloud Auto Cancellation](https://docs.cypress.io/guides/cloud/smart-orchestration#Auto-Cancellation) feature.
+Specify the number of failed tests that will cancel a run when using the [Cypress Cloud Auto Cancellation](https://docs.cypress.io/cloud/features/smart-orchestration/run-cancellation) feature.
 
 This feature requires Cypress 12.6.0 or later and a [Cypress Cloud Business or Enterprise](https://www.cypress.io/cloud/) account.
 
@@ -588,7 +586,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-See [Auto Cancellation](https://docs.cypress.io/guides/cloud/smart-orchestration#Auto-Cancellation) for more information.
+See [Auto Cancellation](https://docs.cypress.io/cloud/features/smart-orchestration/run-cancellation) for more information.
 
 ### Artifacts
 
@@ -733,19 +731,19 @@ jobs:
 
 ![Parallel run](images/parallel.png)
 
-The Cypress GH Action does not spawn or create any additional containers - it only links the multiple containers spawned using the matrix strategy into a single logical Cypress Cloud run where it splits the specs amongst the machines. See the [Cypress Cloud Smart Orchestration](https://on.cypress.io/guides/cloud/smart-orchestration/) guide for a detailed explanation.
+The Cypress GH Action does not spawn or create any additional containers - it only links the multiple containers spawned using the matrix strategy into a single logical Cypress Cloud run where it splits the specs amongst the machines. See the [Cypress Cloud Smart Orchestration](https://docs.cypress.io/cloud/features/smart-orchestration/overview/) guide for a detailed explanation.
 
 If you use the GitHub Actions facility for [Re-running workflows and jobs](https://docs.github.com/en/actions/managing-workflow-runs/re-running-workflows-and-jobs), note that [Re-running failed jobs in a workflow](https://docs.github.com/en/actions/managing-workflow-runs/re-running-workflows-and-jobs?tool=webui#re-running-failed-jobs-in-a-workflow) is not suited for use with parallel recording into Cypress Cloud. Re-running failed jobs in this situation does not simply re-run failed Cypress tests. Instead it re-runs **all** Cypress tests, load-balanced over the containers with failed jobs.
 
-To optimize runs when there are failing tests present, refer to optional [Cypress Cloud Smart Orchestration](https://on.cypress.io/guides/cloud/smart-orchestration/) Premium features:
-- [Spec Prioritization](https://on.cypress.io/guides/cloud/smart-orchestration/spec-prioritization)
-- [Run Cancellation](https://docs.cypress.io/guides/cloud/smart-orchestration/run-cancellation). See also [Specify auto cancel after failures](#specify-auto-cancel-after-failures) for details of how to set this option in a Cypress GH Action workflow.
+To optimize runs when there are failing tests present, refer to optional [Cypress Cloud Smart Orchestration](https://docs.cypress.io/cloud/features/smart-orchestration/overview/) Premium features:
+- [Spec Prioritization](https://docs.cypress.io/cloud/features/smart-orchestration/spec-prioritization)
+- [Auto Cancellation](https://docs.cypress.io/guides/cloud/smart-orchestration/run-cancellation). See also [Specify auto cancel after failures](#specify-auto-cancel-after-failures) for details of how to set this option in a Cypress GH Action workflow.
 
 During staged rollout of a new GitHub-hosted runner version, GitHub may provide a mixture of current and new image versions used by the container matrix. It is recommended to use a [Docker image](#docker-image) in the parallel job run which avoids any Cypress Cloud errors due to browser major version mismatch from the two different image versions. A [Docker image](#docker-image) is not necessary if testing against the default built-in Electron browser because this browser version is fixed by the Cypress version in use and it is unaffected by any GitHub runner image rollout.
 
 ### Component and E2E Testing
 
-[Component Testing](https://on.cypress.io/guides/overview/why-cypress#Component) and [End-to-End (E2E) Testing](https://on.cypress.io/guides/overview/why-cypress#End-to-end) types can be combined in the same job using separate steps
+[Component Testing](https://on.cypress.io/app/core-concepts/testing-types#What-is-Component-Testing) and [End-to-End (E2E) Testing](https://on.cypress.io/app/core-concepts/testing-types#What-is-E2E-Testing) types can be combined in the same job using separate steps
 
 ```yml
 - name: Run E2E tests
@@ -929,7 +927,7 @@ Under Node.js version 18 and later, `wait-on` may fail to recognize that a `loca
 
 ### Custom install command
 
-If you want to overwrite the install command
+The action installs dependencies based on a package manager lock file using default commands described in the [Installation](#installation) section below. If you want to overwrite the default install command you can use the `install-command` option:
 
 ```yml
 - uses: cypress-io/github-action@v6
@@ -938,6 +936,8 @@ If you want to overwrite the install command
 ```
 
 See [example-install-command.yml](.github/workflows/example-install-command.yml) workflow file.
+
+If you do not commit a lock file to the repository, you cannot use the action to install dependencies. In this case you must ensure that dependencies are installed before using the action, and you must use the action option setting `install: false`.
 
 ### Command prefix
 
@@ -1127,7 +1127,8 @@ jobs:
 ### pnpm
 
 The package manager `pnpm` is not pre-installed in [GitHub Actions runner images](https://github.com/actions/runner-images) (unlike `npm` and `yarn`) and so it must be installed in a separate workflow step (see below). If the action finds a `pnpm-lock.yaml` file, it uses the [pnpm](https://pnpm.io/cli/install) command `pnpm install --frozen-lockfile` by default to install dependencies.
-At this time, the action does not automatically cache dependencies installed by pnpm. We advise against attempting to work around this restriction, by caching the pnpm store directory through additional workflow steps, as this can lead to the action skipping installation of the Cypress binary, causing workflow failure.
+
+The example below follows [pnpm recommendations](https://pnpm.io/continuous-integration#github-actions) for installing pnpm and caching the [pnpm store](https://pnpm.io/cli/store).
 
 ```yaml
 name: example-basic-pnpm
@@ -1139,7 +1140,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install pnpm
-        run: npm install -g pnpm@9
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: examples/basic-pnpm/pnpm-lock.yaml
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
@@ -1283,7 +1292,7 @@ jobs:
     # let's make sure our "app" works on several versions of Node
     strategy:
       matrix:
-        node: [18, 20, 22]
+        node: [18, 20, 22, 23]
     name: E2E on Node v${{ matrix.node }}
     steps:
       - name: Setup Node
@@ -1317,7 +1326,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node: [18, 20, 22]
+        node: [18, 20, 22, 23]
     name: E2E on Node v${{ matrix.node }}
     steps:
       - uses: actions/setup-node@v4
@@ -1430,7 +1439,7 @@ See section [Yarn Modern](#yarn-modern) for information about using Yarn version
 
 ## Debugging
 
-This action uses the [debug](https://github.com/visionmedia/debug#readme) module to output additional verbose logs. You can see these debug messages by setting the following environment variable:
+This action uses the [debug](https://github.com/debug-js/debug#readme) module to output additional verbose logs. You can see these debug messages by setting the following environment variable:
 
 ```yml
 DEBUG: @cypress/github-action
@@ -1451,7 +1460,7 @@ To collect more verbose GitHub Action logs you can set a GitHub secret or variab
 
 ### Logs from the test runner
 
-To see the [Cypress debug logs](http://on.cypress.io/troubleshooting#Print-DEBUG-logs) add an environment variable to the action:
+To see all [Cypress debug logs](http://on.cypress.io/troubleshooting#Print-DEBUG-logs), add the environment variable `DEBUG` to the workflow using the value `cypress:*`:
 
 ```yml
 - name: Cypress tests with debug logs
@@ -1459,6 +1468,8 @@ To see the [Cypress debug logs](http://on.cypress.io/troubleshooting#Print-DEBUG
   env:
     DEBUG: 'cypress:*'
 ```
+
+Replace the value `cypress:*` with specific [Cypress log sources](https://on.cypress.io/troubleshooting#Log-sources) to filter debug log output.
 
 ### Debugging waiting for URL to respond
 
@@ -1469,29 +1480,37 @@ If you have a problem with `wait-on` not working, you can check the [src/ping.js
 - start your server
 - from another terminal call the `ping` yourself to validate the server is responding:
 
-```
-$ node src/ping-cli.js <url>
+```shell
+node src/ping-cli.js <url>
 ```
 
-For example
+For example:
 
-```
+```text
 $ node src/ping-cli.js https://example.cypress.io
 pinging url https://example.cypress.io for 30 seconds
-::debug::pinging https://example.cypress.io has finished ok
 ```
 
-## More information
+You can also enable debug logs by setting the environment variable `DEBUG='@cypress/github-action'`, for example:
 
-- Read our blog post [Drastically Simplify Testing on CI with Cypress GitHub Action](https://www.cypress.io/blog/2019/11/20/drastically-simplify-your-testing-with-cypress-github-action/)
-- Read [Test the Preview Vercel Deploys](https://glebbahmutov.com/blog/develop-preview-test/) blog post
-- [Creating actions](https://docs.github.com/en/actions/creating-actions) docs
+```text
+$ DEBUG='@cypress/github-action' node src/ping-cli.js https://example.cypress.io
+pinging url https://example.cypress.io for 30 seconds
+  @cypress/github-action total ping timeout 60000 +0ms
+  @cypress/github-action individual ping timeout 30000ms +0ms
+  @cypress/github-action retries limit 2 +0ms
+  @cypress/github-action pinging https://example.cypress.io has finished ok after 185ms +185ms
+```
 
 ## Extras
 
 ### Manual trigger
 
-If you add `workflow_dispatch` event to your workflow, you will be able to start the workflow by clicking a button on the GitHub page, see the [Test External Site Using GitHub Actions](https://www.youtube.com/watch?v=4TeSOj2Iy_Q) video.
+Each of the `example-*` workflows in the [.github/workflows](https://github.com/cypress-io/github-action/tree/master/.github/workflows) directory is configured to trigger on a `workflow_dispatch` event. This allows any of these workflows to be run manually.
+
+[Fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) and [clone](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#cloning-your-forked-repository) this repository to try out the examples live in your own repository copy. Refer to the GitHub Actions documentation [Manually running a workflow](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/manually-running-a-workflow) which explains how to run a workflow from the Actions tab on GitHub. Workflows can also be run using the GitHub CLI or the REST API.
+
+If you configure a `workflow_dispatch` event in your own workflows, you will be able to run them manually in the same way.
 
 ### Outputs
 
@@ -1646,13 +1665,13 @@ jobs:
 
 Node.js is required to run this action. The recommended version `v6` supports:
 
-- **Node.js** 18.x, 20.x and 22.x
+- **Node.js** 18.x, 20.x, 22.x and 23.x
 
 and is generally aligned with [Node.js's release schedule](https://github.com/nodejs/Release).
 
 ### Usage
 
-`github-action` command-type options such as [`install-command`](https://github.com/cypress-io/github-action#custom-install-command), [`build`](https://github.com/cypress-io/github-action#build-app), [`start`](https://github.com/cypress-io/github-action#start-server) and [`command`](https://github.com/cypress-io/github-action#custom-test-command) are executed with the runner's version of Node.js. You can use GitHub's [actions/setup-node](https://github.com/actions/setup-node) to install an explicit Node.js version into the runner.
+`github-action` command-type options such as [`install-command`](#custom-install-command), [`build`](#build-app), [`start`](#start-server) and [`command`](#custom-test-command) are executed with the runner's version of Node.js. You can use GitHub's [actions/setup-node](https://github.com/actions/setup-node) to install an explicit Node.js version into the runner.
 
 [![Node versions example](https://github.com/cypress-io/github-action/actions/workflows/example-node-versions.yml/badge.svg)](.github/workflows/example-node-versions.yml)
 
@@ -1664,7 +1683,7 @@ View the [CHANGELOG](./CHANGELOG.md) document for an overview of version changes
 
 ## Compatibility
 
-- `github-action@v6` is the current recommended version and uses `node20`
+- `github-action@v6` is the current recommended version, uses `node20` and is compatible with Cypress `10` and above.
 - `github-action` versions `v1` to `v5` are unsupported: they rely on Node.js `12` and `16` in End-of-life status.
 
 ## Contributing

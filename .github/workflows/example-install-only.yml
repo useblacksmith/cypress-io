@@ -11,7 +11,7 @@ jobs:
   # do not install every dependency in this example
   # just install Cypress, but make sure to cache it
   install-cypress-only:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
           key: my-cache-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Cypress 📥
-        run: npm install cypress@13.13.1 --save-dev
+        run: npm install cypress@13.6.0 --save-dev
 
       - name: Cypress tests 🧪
         uses: ./

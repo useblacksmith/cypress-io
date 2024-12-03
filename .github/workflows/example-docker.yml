@@ -8,14 +8,15 @@ on:
 
 jobs:
   docker-browsers:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         browser: [chrome, edge, electron, firefox]
-    # from https://hub.docker.com/r/cypress/browsers/tags
+    # Cypress Docker image documentation on https://github.com/cypress-io/cypress-docker-images
+    # Available cypress/browsers tags listed on https://hub.docker.com/r/cypress/browsers/tags
     container:
-      image: cypress/browsers:node-20.14.0-chrome-126.0.6478.114-1-ff-127.0.1-edge-126.0.2592.61-1
+      image: cypress/browsers:22.11.0
       options: --user 1001
     steps:
       - name: Checkout
