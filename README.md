@@ -1,3 +1,9 @@
+## ⚠️ Archive Notice
+
+Blacksmith now supports transparent caching as explained in https://www.blacksmith.sh/blog/cache. To this effect it is recommended to switch to the upstream maintained versions of this action as you will continue to leverage our much faster caching without any code changes. This action will no longer receive dependency or security updates.
+
+---
+
 # cypress-io/github-action [![Action status][ci-badge]][ci-workflow] [![cypress][cloud-badge]][cloud-project] [![renovate-app badge][renovate-badge]][renovate-bot]
 
  > [GitHub Action](https://docs.github.com/en/actions) for running [Cypress](https://www.cypress.io) end-to-end and component tests. Includes npm, pnpm and Yarn installation, custom caching and lots of configuration options.
